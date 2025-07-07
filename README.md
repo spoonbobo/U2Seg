@@ -1,128 +1,80 @@
-# U2Seg: Unsupervised Universal Image Segmentation
+# U2Seg Enhanced Demo - COMP7404 Group 11
 
-We present **U2Seg**, a unified framework for **U**nsupervised **U**niversal image **Seg**mentation that consistently outperforms previous state-of-the-art methods designed for individual tasks: CutLER for unsupervised instance segmentation, STEGO for unsupervised semantic segmentation, and the naive combination of CutLER and STEGO for unsupervised panoptic segmentation.
-
-<p align="center"> <img src='docs/teaser_img.jpg' align="center" > </p>
-
-> [**Unsupervised Universal Image Segmentation**](https://u2seg.github.io/)            
-> [Dantong Niu*](https://scholar.google.com/citations?user=AzlUrvUAAAAJ&hl=en), [Xudong Wang*](https://people.eecs.berkeley.edu/~xdwang/), [Xinyang Han*](https://xinyanghan.github.io/), [Long Lian](https://tonylian.com/), [Roei Herzig](https://roeiherz.github.io/), [Trevor Darrell](https://people.eecs.berkeley.edu/~trevor/)     
-> Berkeley AI Research, UC Berkeley    
-> CVPR 2024    
-
-[project page](https://u2seg.github.io/) | [arxiv](https://arxiv.org/abs/2312.17243) | [bibtex](#citation)
-
-<a href="https://paperswithcode.com/sota/unsupervised-panoptic-segmentation-on-coco?p=unsupervised-universal-image-segmentation">
-  <img src="https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/unsupervised-universal-image-segmentation/unsupervised-panoptic-segmentation-on-coco">
-</a>
-<br>
-<a href="https://paperswithcode.com/sota/unsupervised-zero-shot-panoptic-segmentation?p=unsupervised-universal-image-segmentation">
-  <img src="https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/unsupervised-universal-image-segmentation/unsupervised-zero-shot-panoptic-segmentation">
-</a>
-<br>
-<a href="https://paperswithcode.com/sota/unsupervised-zero-shot-instance-segmentation?p=unsupervised-universal-image-segmentation">
-  <img src="https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/unsupervised-universal-image-segmentation/unsupervised-zero-shot-instance-segmentation">
-</a>
-<br>
-<a href="https://paperswithcode.com/sota/unsupervised-semantic-segmentation-on-coco-7?p=unsupervised-universal-image-segmentation">
-  <img src="https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/unsupervised-universal-image-segmentation/unsupervised-semantic-segmentation-on-coco-7">
-</a>
+Enhanced demonstration tools for **U2Seg: Unsupervised Universal Image Segmentation** with ground truth comparison capabilities and comprehensive visualization features.
 
 ## Team Introduction
 
-This repository has been enhanced and extended by **COMP7404 Group 11** from the University of Hong Kong. Our team has added comprehensive demo capabilities, ground truth comparison tools, and improved visualization features to make U2Seg more accessible for research and educational purposes.
+This repository has been enhanced by **COMP7404 Group 11** from the University of Hong Kong. We've added comprehensive demo capabilities, ground truth comparison tools, and improved visualization features to make U2Seg more accessible for research and educational purposes.
 
 **Team Members:**
 - **Group 11** - COMP7404 Advanced Machine Learning
 - **Institution:** University of Hong Kong
 - **Course:** COMP7404 - Advanced Topics in Machine Learning
 
-Our contributions include:
-- Enhanced demo script with ground truth comparison (`u2seg_demo_with_gt.py`)
-- Side-by-side visualization of predictions vs. ground truth
-- Improved documentation and usage examples
-- Video processing capabilities
-- Extended evaluation tools
+## Our Contributions
 
-<!-- ## Features 
-- U2Seg is the first universal unsupervised image segmentation model that can tackle unsupervised semantic-aware instance, semantic and panoptic segmentation tasks using a unified framework.
-- U2Seg can learn unsupervised object detectors and instance segmentors solely on ImageNet-1K.
-- U2Seg exhibits strong robustness to domain shifts when evaluated on 11 different benchmarks across domains like natural images, video frames, paintings, sketches, etc.
-- U2Seg can serve as a pretrained model for fully/semi-supervised detection and segmentation tasks. -->
+- ✨ **Enhanced demo script** with ground truth comparison (`u2seg_demo_with_gt.py`)
+- 📊 **Side-by-side visualization** of predictions vs. ground truth
+- 🎥 **Video processing capabilities** with real-time preview
+- 📖 **Improved documentation** and usage examples
+- 🔧 **Extended evaluation tools** for better analysis
 
 ## Installation
-See [installation instructions](INSTALL.md).
 
-## Dataset Preparation
-See [Preparing Datasets for U2Seg](datasets/README.md).
-
-## Method Overview
-<p align="center">
-  <img src="docs/main_pipeline_1.jpg" width=90%>
-</p>
-
-U2Seg has 4 stages: 1) generating pseudo instance masks with MaskCut and clustering, 2) generating pseudo semantic masks with STEGO and 3) merging instance masks, semantic masks to get pseudo labels for panoptic segmentation and 4) learning unsupervised universal segmentor from pseudo-masks of unlabeled data.
-
-## Pseudo Mask Gneration
-This part includes MaskCut+Clustering, which we use to generate the pseudo for training of U2Seg, additional information will come later. 
-For implementers who wants to play with out models, we provide well-processed annotations in Data Preparation.
-
-## Universal Image Segmentation
-
-### Training
-After you prepare the dataset following the above instructions, you should be able to train the U2Seg universal segmentation model by:
-
-```
-python ./tools/train_net.py  --config-file ./configs/COCO-PanopticSegmentation/u2seg_R50_800.yaml
-```
-Note: you need to download the pre-trained [dino backbone](https://drive.google.com/file/d/1UtRUgUQK20KS8MGebCWgLPHxrez7mfV4/view?usp=sharing) and change the path of the corresponding ```yaml``` file.
-
-To train U2Seg model with different clustering number (e.g. 300), you can use `configs/COCO-PanopticSegmentation/u2seg_R50_300.yaml` config file and set the environment variable by `export CLUSTER_NUM=300`. (This variable would be used in `detectron2/data/datasets/builtin.py` and `detectron2/data/datasets/builtin_meta.py`)
-
-### Inference
-We provide models trained with different cluster numbers and training sets. Each cell in the table below contains a link to the corresponding model checkpoint. Place the downloaded ckpts under `ckpts` folder.
-
-<table>
-<thead>
-<tr>
-<th align="center">Cluster Num</th>
-<th align="center">ImageNet</th>
-<th align="center">COCO</th>
-<th align="center">ImageNet + COCO</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center">800</td>
-<td align="center"><a href="https://drive.google.com/drive/folders/186GBbIhEW7W0eidGOGRTmTyM_HedSOQh">CheckPoint</a></td>
-<td align="center"><a href="https://drive.google.com/drive/folders/186GBbIhEW7W0eidGOGRTmTyM_HedSOQh">CheckPoint</a></td>
-<td align="center"><a href="https://drive.google.com/drive/folders/186GBbIhEW7W0eidGOGRTmTyM_HedSOQh">CheckPoint</a></td>
-</tr>
-<tr>
-<td align="center">300</td>
-<td align="center"><a href="https://drive.google.com/drive/folders/186GBbIhEW7W0eidGOGRTmTyM_HedSOQh">CheckPoint</a></td>
-<td align="center"><a href="https://drive.google.com/drive/folders/186GBbIhEW7W0eidGOGRTmTyM_HedSOQh">CheckPoint</a></td>
-<td align="center"><a href="https://drive.google.com/drive/folders/186GBbIhEW7W0eidGOGRTmTyM_HedSOQh">CheckPoint</a></td>
-</tr>
-</tbody>
-</table>  
-
-## Demo Usage
-
-We provide comprehensive demo capabilities for testing U2Seg on images and videos. Our enhanced demo tools include ground truth comparison and detailed visualizations.
-
-### Quick Start Demo
-
-#### 1. Basic Image Inference
-To run inference on images using the original demo:
+### Quick Installation
 ```bash
-python ./demo/u2seg_demo.py --config-file configs/COCO-PanopticSegmentation/u2seg_eval_800.yaml --input demo/images/*jpg --output results/demo_800 
+# Clone the repository
+git clone https://github.com/your-repo/U2Seg.git
+cd U2Seg
+
+# Install the package
+pip install .
 ```
 
-#### 2. Enhanced Demo with Ground Truth Comparison
-Our enhanced demo script provides side-by-side comparison with COCO ground truth annotations:
+### Requirements
+- Python 3.8+
+- PyTorch 1.8+
+- OpenCV
+- NumPy
+- Matplotlib
+- pycocotools
 
+## Quick Start
+
+### 1. Download Pre-trained Model
+Download the model checkpoint and place it in the `ckpts/` folder:
 ```bash
-# Basic usage with ground truth comparison
+mkdir -p ckpts
+# Download from: https://drive.google.com/drive/folders/186GBbIhEW7W0eidGOGRTmTyM_HedSOQh
+# Place as: ckpts/cocotrain_800_0089999.pth
+```
+
+### 2. Basic Demo (No Ground Truth)
+```bash
+# Test on demo images
+python demo/u2seg_demo_with_gt.py \
+    --config-file configs/COCO-PanopticSegmentation/u2seg_eval_800.yaml \
+    --input "demo/images/*.jpg" \
+    --output results/demo \
+    --max-images 5
+```
+
+### 3. Enhanced Demo with Ground Truth Comparison
+
+#### Setup COCO Data (One-time)
+```bash
+# Download COCO validation images (~1GB)
+wget http://images.cocodataset.org/zips/val2017.zip
+unzip val2017.zip
+
+# Download COCO annotations (~25MB)
+mkdir -p coco/annotations
+wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip
+unzip annotations_trainval2017.zip -d coco/
+```
+
+#### Run Ground Truth Comparison
+```bash
 python demo/u2seg_demo_with_gt.py \
     --config-file configs/COCO-PanopticSegmentation/u2seg_eval_800.yaml \
     --input "val2017/val2017/*.jpg" \
@@ -132,19 +84,28 @@ python demo/u2seg_demo_with_gt.py \
     --max-images 10
 ```
 
-#### 3. Processing Your Own Images
+## Usage Examples
+
+### Process Your Own Images
 ```bash
-# Process custom images without ground truth
 python demo/u2seg_demo_with_gt.py \
-    --config-file configs/COCO-PanopticSegmentation/u2seg_eval_800.yaml \
     --input "path/to/your/images/*.jpg" \
     --output results/custom \
     --max-images 20
 ```
 
-#### 4. Video Processing
+### Process More Images
 ```bash
-# Process videos
+# Process 50 images instead of default 5
+python demo/u2seg_demo_with_gt.py \
+    --input "val2017/val2017/*.jpg" \
+    --show-ground-truth \
+    --max-images 50 \
+    --output results/batch_50
+```
+
+### Video Processing
+```bash
 python demo/u2seg_demo_with_gt.py \
     --mode videos \
     --video-dir ./videos \
@@ -153,159 +114,96 @@ python demo/u2seg_demo_with_gt.py \
     --preview
 ```
 
-### Demo Parameters
+## Command Line Options
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `--input` | Input images path or glob pattern | `./demo/images/*.jpg` |
-| `--output` | Output directory for results | `./results_with_gt` |
-| `--show-ground-truth` | Enable ground truth comparison | `False` |
-| `--ground-truth-file` | Path to COCO annotations | `./coco/annotations/instances_val2017.json` |
+| `--input` | Input images (glob pattern or specific files) | `./demo/images/*.jpg` |
+| `--output` | Output directory | `./results_with_gt` |
+| `--show-ground-truth` | Enable GT comparison (COCO images only) | `False` |
 | `--max-images` | Maximum number of images to process | `5` |
 | `--confidence-threshold` | Minimum confidence for predictions | `0.5` |
-| `--mode` | Processing mode: `images`, `videos`, or `both` | `images` |
-| `--show-fps` | Show FPS info on video frames | `False` |
-| `--preview` | Real-time preview during video processing | `False` |
+| `--mode` | `images`, `videos`, or `both` | `images` |
+| `--show-fps` | Show FPS on video frames | `False` |
+| `--preview` | Real-time video preview | `False` |
 
-### Demo Output
+## Output Files
 
-The enhanced demo generates three types of visualizations for each image:
+For each processed image, the enhanced demo generates:
 
-1. **`comparison_*.jpg`** - Side-by-side comparison showing:
+1. **`comparison_*.jpg`** - Side-by-side view:
    - Original image
-   - U2Seg predictions
-   - Ground truth annotations
+   - U2Seg predictions  
+   - Ground truth (if available)
 
-2. **`pred_*.jpg`** - U2Seg predictions only
+2. **`pred_*.jpg`** - Predictions only
 
-3. **`gt_*.jpg`** - Ground truth annotations only
+3. **`gt_*.jpg`** - Ground truth only (if available)
 
-### Setting Up COCO Data for Ground Truth Comparison
+## Examples
 
-To use the ground truth comparison feature:
-
-1. **Download COCO validation images:**
+### Basic Usage
 ```bash
-# Download val2017 images (~1GB)
-wget http://images.cocodataset.org/zips/val2017.zip
-unzip val2017.zip
+# Quick test with demo images
+python demo/u2seg_demo_with_gt.py
 ```
 
-2. **Download COCO annotations:**
-```bash
-# Create annotations directory
-mkdir -p coco/annotations
-
-# Download annotations (~25MB)
-wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip
-unzip annotations_trainval2017.zip -d coco/
-```
-
-3. **Run demo with ground truth:**
+### Specific Images with Ground Truth
 ```bash
 python demo/u2seg_demo_with_gt.py \
-    --config-file configs/COCO-PanopticSegmentation/u2seg_eval_800.yaml \
-    --input "val2017/*.jpg" \
-    --output results_with_gt \
+    --input val2017/val2017/000000006040.jpg val2017/val2017/000000397133.jpg \
     --show-ground-truth \
-    --max-images 50
+    --output results/specific
 ```
 
-### Demo Examples
-
-We give a few demo images in ```demo/images``` and the corresponding visualizations of the panoptic segmentation with U2Seg:
-<p align="center">
-  <img src="docs/u2seg-demo.png" width=80%>
-</p>
-
-#### Advanced Usage Examples
-
-**Process specific COCO images:**
+### Batch Processing
 ```bash
+# Process 100 COCO validation images
 python demo/u2seg_demo_with_gt.py \
-    --input val2017/000000006040.jpg val2017/000000397133.jpg \
+    --input "val2017/val2017/*.jpg" \
     --show-ground-truth \
-    --output results/specific_images
-```
-
-**Batch processing with different cluster models:**
-```bash
-# Using 300-cluster model
-python demo/u2seg_demo_with_gt.py \
-    --config-file configs/COCO-PanopticSegmentation/u2seg_eval_300.yaml \
-    --input "val2017/*.jpg" \
     --max-images 100 \
-    --output results/cluster_300
+    --output results/coco_100
 ```
 
-**Video processing with real-time preview:**
-```bash
-python demo/u2seg_demo_with_gt.py \
-    --mode videos \
-    --video-input path/to/video.mp4 \
-    --output results/video_output \
-    --show-fps \
-    --preview
+## Troubleshooting
+
+### Common Issues
+
+**"The input path(s) was not found"**
+- Check your image paths: `ls val2017/val2017/*.jpg | head -5`
+- Use quotes around glob patterns: `"val2017/val2017/*.jpg"`
+
+**"Ground truth file not found"**
+- Download COCO annotations as shown in setup
+- Check file exists: `ls ./coco/annotations/instances_val2017.json`
+
+**Only processing 5 images**
+- Add `--max-images N` to process more images
+- Default limit prevents overwhelming output
+
+## Windows Users
+
+Use PowerShell and backslashes or quoted forward slashes:
+```powershell
+python demo/u2seg_demo_with_gt.py --input "val2017\val2017\*.jpg" --max-images 10
 ```
 
-To test model trained with different clustering number (e.g. 300), you can use config file like this `configs/COCO-PanopticSegmentation/u2seg_R50_300.yaml`.
+## Original Paper
 
-### Evaluation
-To reproduce the quantitative evaluation results in the main paper, one can following the steps below.
-
-#### 1. Prepare the ground truth annotations
-Since the original official panoptic annotations have 53 semantic categories, while u2seg has 15 supercategories, first run [```get_panoptic_anns_supercategory.py```](https://github.com/u2seg/U2Seg/blob/main/datasets/prepare_ours/get_panoptic_anns_supercategory.py) to generate the supercategory version of groudtruth, then you will get ```panoptic_val2017_300super.json``` under the ```detectron2/datasets/datasets/panoptic_anns``` path.
-
-#### 2. Set the CATEGORIES
-User should manually comment out line 42-176 in [```detectron2/data/datasets/builtin_meta.py```](https://github.com/u2seg/U2Seg/blob/148cc100c3a13426700af619aad68a6afa5c5f6f/detectron2/data/datasets/builtin_meta.py#L42) when switch from training to evaluation. Also user needs to maunally change the ```cluster_num``` in line 39 in [```detectron2/evaluation/panoptic_evaluation.py```](https://github.com/u2seg/U2Seg/blob/148cc100c3a13426700af619aad68a6afa5c5f6f/detectron2/evaluation/panoptic_evaluation.py#L39) based on your own seeting.
-
-#### 3. Get hungarain mapping dict
-We do the hungarian matching to map our cluter id to real cagetory id. The user needs to run:
-
-```
-export CLUSTER_NUM=300
-python tools/train_net.py --config-file configs/COCO-PanopticSegmentation/u2seg_eval_300.yaml --eval-only --eval-mode hungarian_matching --num-gpus 1
-```
-* note that this should be run only by using one single gpu. After that, a folder named ```hungarian_matching``` should be gnerated under ```detectron2/```, we provide an [hungarian mapping dict example with cluter number is 300](https://drive.google.com/drive/folders/19ka73SH1mHAfflzlZpA2McWeZakLujEX?usp=sharing) the user can have a quick check of the intermediate results.
-
-#### 4. Get evaluation results for instance segmentation, semantic segmentation and panoptic segmentation
-```
-export CLUSTER_NUM=300
-python tools/train_net.py --config-file configs/COCO-PanopticSegmentation/u2seg_eval_300.yaml --eval-only --eval-mode eval --num-gpus 8
-```
-* this can be executed by multiple gpus.
-
-### Efficient Learning
-We give the reproduction of our efficient learning part in [U2Seg_eff](https://github.com/Dantong88/U2Seg_eff). See that repo if you want to play with this part.
+> **Unsupervised Universal Image Segmentation**  
+> Dantong Niu, Xudong Wang, Xinyang Han, Long Lian, Roei Herzig, Trevor Darrell  
+> CVPR 2024  
+> [Paper](https://arxiv.org/abs/2312.17243) | [Project Page](https://u2seg.github.io/)
 
 ## License
-U2Seg is licensed under the [Apache](LICENSE), however portions of the project are available under separate license terms: CutLER, Detectron2 and DINO are licensed under the CC-BY-NC license; TokenCut, Bilateral Solver and CRF are licensed under the MIT license; If you later add other third party code, please keep this license info updated, and please let us know if that component is licensed under something other than CC-BY-NC, MIT, or CC0.
 
-## Ethical Considerations
-U2Seg's wide range of detection capabilities may introduce similar challenges to many other visual recognition methods.
-As the image can contain arbitrary instances, it may impact the model output.
+This enhanced version maintains the original U2Seg license terms. See LICENSE file for details.
 
-## How to get support from us?
-If you have any general questions, feel free to email us at [Dantong Niu](mailto:bias_88@berkeley.edu), [Xudong Wang](mailto:xdwang@eecs.berkeley.edu), [Xinyang Han](mailto:hanxinyang66@gmail.com). If you have code or implementation-related questions, please feel free to send emails to us or open an issue in this codebase (We recommend that you open an issue in this codebase, because your questions may help others). 
+## Support
 
-## Citation
-If you find our work inspiring or use our codebase in your research, please consider giving a star ⭐ and a citation.
-```
-@misc{niu2023unsupervised,
-      title={Unsupervised Universal Image Segmentation}, 
-      author={Dantong Niu and Xudong Wang and Xinyang Han and Long Lian and Roei Herzig and Trevor Darrell},
-      year={2023},
-      eprint={2312.17243},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
-}
-```
+For questions about our enhanced demo tools:
+- Open an issue in this repository
+- The enhanced features are designed to be self-explanatory with clear error messages
 
-<!-- ## Features 
-- U2Seg is the first universal unsupervised image segmentation model that can tackle unsupervised semantic-aware instance, semantic and panoptic segmentation tasks using a unified framework.
-- U2Seg can learn unsupervised object detectors and instance segmentors solely on ImageNet-1K.
-- U2Seg exhibits strong robustness to domain shifts when evaluated on 11 different benchmarks across domains like natural images, video frames, paintings, sketches, etc.
-- U2Seg can serve as a pretrained model for fully/semi-supervised detection and segmentation tasks. -->
-
-
-
+For questions about the original U2Seg method, refer to the original authors.
