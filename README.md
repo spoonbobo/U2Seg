@@ -27,6 +27,22 @@ We present **U2Seg**, a unified framework for **U**nsupervised **U**niversal ima
   <img src="https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/unsupervised-universal-image-segmentation/unsupervised-semantic-segmentation-on-coco-7">
 </a>
 
+## Team Introduction
+
+This repository has been enhanced and extended by **COMP7404 Group 11** from the University of Hong Kong. Our team has added comprehensive demo capabilities, ground truth comparison tools, and improved visualization features to make U2Seg more accessible for research and educational purposes.
+
+**Team Members:**
+- **Group 11** - COMP7404 Advanced Machine Learning
+- **Institution:** University of Hong Kong
+- **Course:** COMP7404 - Advanced Topics in Machine Learning
+
+Our contributions include:
+- Enhanced demo script with ground truth comparison (`u2seg_demo_with_gt.py`)
+- Side-by-side visualization of predictions vs. ground truth
+- Improved documentation and usage examples
+- Video processing capabilities
+- Extended evaluation tools
+
 <!-- ## Features 
 - U2Seg is the first universal unsupervised image segmentation model that can tackle unsupervised semantic-aware instance, semantic and panoptic segmentation tasks using a unified framework.
 - U2Seg can learn unsupervised object detectors and instance segmentors solely on ImageNet-1K.
@@ -89,20 +105,150 @@ We provide models trained with different cluster numbers and training sets. Each
 </tr>
 </tbody>
 </table>  
- 
 
-To run inference on images, you should first assign a checkpoint in the ```u2seg_eval.yaml```, then:
-```
+## Demo Usage
+
+We provide comprehensive demo capabilities for testing U2Seg on images and videos. Our enhanced demo tools include ground truth comparison and detailed visualizations.
+
+### Quick Start Demo
+
+#### 1. Basic Image Inference
+To run inference on images using the original demo:
+```bash
 python ./demo/u2seg_demo.py --config-file configs/COCO-PanopticSegmentation/u2seg_eval_800.yaml --input demo/images/*jpg --output results/demo_800 
 ```
 
-To test model trained with different clustering number (e.g. 300), you can use config file like this `configs/COCO-PanopticSegmentation/u2seg_R50_300.yaml`.
+#### 2. Enhanced Demo with Ground Truth Comparison
+Our enhanced demo script provides side-by-side comparison with COCO ground truth annotations:
+
+```bash
+# Basic usage with ground truth comparison
+python demo/u2seg_demo_with_gt.py \
+    --config-file configs/COCO-PanopticSegmentation/u2seg_eval_800.yaml \
+    --input "val2017/val2017/*.jpg" \
+    --output results_with_gt \
+    --show-ground-truth \
+    --ground-truth-file ./coco/annotations/instances_val2017.json \
+    --max-images 10
+```
+
+#### 3. Processing Your Own Images
+```bash
+# Process custom images without ground truth
+python demo/u2seg_demo_with_gt.py \
+    --config-file configs/COCO-PanopticSegmentation/u2seg_eval_800.yaml \
+    --input "path/to/your/images/*.jpg" \
+    --output results/custom \
+    --max-images 20
+```
+
+#### 4. Video Processing
+```bash
+# Process videos
+python demo/u2seg_demo_with_gt.py \
+    --mode videos \
+    --video-dir ./videos \
+    --output results/videos \
+    --show-fps \
+    --preview
+```
+
+### Demo Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `--input` | Input images path or glob pattern | `./demo/images/*.jpg` |
+| `--output` | Output directory for results | `./results_with_gt` |
+| `--show-ground-truth` | Enable ground truth comparison | `False` |
+| `--ground-truth-file` | Path to COCO annotations | `./coco/annotations/instances_val2017.json` |
+| `--max-images` | Maximum number of images to process | `5` |
+| `--confidence-threshold` | Minimum confidence for predictions | `0.5` |
+| `--mode` | Processing mode: `images`, `videos`, or `both` | `images` |
+| `--show-fps` | Show FPS info on video frames | `False` |
+| `--preview` | Real-time preview during video processing | `False` |
+
+### Demo Output
+
+The enhanced demo generates three types of visualizations for each image:
+
+1. **`comparison_*.jpg`** - Side-by-side comparison showing:
+   - Original image
+   - U2Seg predictions
+   - Ground truth annotations
+
+2. **`pred_*.jpg`** - U2Seg predictions only
+
+3. **`gt_*.jpg`** - Ground truth annotations only
+
+### Setting Up COCO Data for Ground Truth Comparison
+
+To use the ground truth comparison feature:
+
+1. **Download COCO validation images:**
+```bash
+# Download val2017 images (~1GB)
+wget http://images.cocodataset.org/zips/val2017.zip
+unzip val2017.zip
+```
+
+2. **Download COCO annotations:**
+```bash
+# Create annotations directory
+mkdir -p coco/annotations
+
+# Download annotations (~25MB)
+wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip
+unzip annotations_trainval2017.zip -d coco/
+```
+
+3. **Run demo with ground truth:**
+```bash
+python demo/u2seg_demo_with_gt.py \
+    --config-file configs/COCO-PanopticSegmentation/u2seg_eval_800.yaml \
+    --input "val2017/*.jpg" \
+    --output results_with_gt \
+    --show-ground-truth \
+    --max-images 50
+```
+
+### Demo Examples
 
 We give a few demo images in ```demo/images``` and the corresponding visualizations of the panoptic segmentation with U2Seg:
 <p align="center">
   <img src="docs/u2seg-demo.png" width=80%>
 </p>
 
+#### Advanced Usage Examples
+
+**Process specific COCO images:**
+```bash
+python demo/u2seg_demo_with_gt.py \
+    --input val2017/000000006040.jpg val2017/000000397133.jpg \
+    --show-ground-truth \
+    --output results/specific_images
+```
+
+**Batch processing with different cluster models:**
+```bash
+# Using 300-cluster model
+python demo/u2seg_demo_with_gt.py \
+    --config-file configs/COCO-PanopticSegmentation/u2seg_eval_300.yaml \
+    --input "val2017/*.jpg" \
+    --max-images 100 \
+    --output results/cluster_300
+```
+
+**Video processing with real-time preview:**
+```bash
+python demo/u2seg_demo_with_gt.py \
+    --mode videos \
+    --video-input path/to/video.mp4 \
+    --output results/video_output \
+    --show-fps \
+    --preview
+```
+
+To test model trained with different clustering number (e.g. 300), you can use config file like this `configs/COCO-PanopticSegmentation/u2seg_R50_300.yaml`.
 
 ### Evaluation
 To reproduce the quantitative evaluation results in the main paper, one can following the steps below.
@@ -128,9 +274,6 @@ export CLUSTER_NUM=300
 python tools/train_net.py --config-file configs/COCO-PanopticSegmentation/u2seg_eval_300.yaml --eval-only --eval-mode eval --num-gpus 8
 ```
 * this can be executed by multiple gpus.
-
-
-
 
 ### Efficient Learning
 We give the reproduction of our efficient learning part in [U2Seg_eff](https://github.com/Dantong88/U2Seg_eff). See that repo if you want to play with this part.
